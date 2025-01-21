@@ -13,6 +13,24 @@ export async function createPeerConnection(socketId, setLocalVideo, addRemoteVid
     const peerConnection = new RTCPeerConnection(servers);
     let localStream = null;
     let remoteStream = null;
+    const handleStats = () => {
+        if (peerConnection.current && peerConnection.current.connectionState === 'connected') {
+            peerConnection.current.getStats(null).then((stats) => {
+                stats.forEach((report) => {
+                    if (report.type === 'inbound-rtp' && report.kind === 'video') {
+                        console.log('video report', report)
+                    }
+                    if (report.type === 'outbound-rtp' && report.kind === 'video') {
+                        console.log('video report', report)
+                    }
+                    if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+                        console.log('candidate-pair', report)
+                    }
+                });
+            });
+        }
+    }
+    setInterval(handleStats, 2000)
 
 
     if (setLocalVideo) {

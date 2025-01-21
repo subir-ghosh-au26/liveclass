@@ -1,63 +1,40 @@
-const servers = {
-    iceServers: [
-        {
-            urls: [
-                'stun:stun.l.google.com:19302',
-                'stun:stun1.l.google.com:19302'
-            ],
-        },
-    ],
-};
-
 export async function createPeerConnection(socketId, setLocalVideo, addRemoteVideo, removeRemoteVideo, muted) {
     const peerConnection = new RTCPeerConnection(servers);
     let localStream = null;
     let remoteStream = null;
-    const handleStats = () => {
-        if (peerConnection.current && peerConnection.current.connectionState === 'connected') {
-            peerConnection.current.getStats(null).then((stats) => {
-                stats.forEach((report) => {
-                    if (report.type === 'inbound-rtp' && report.kind === 'video') {
-                        console.log('video report', report)
-                    }
-                    if (report.type === 'outbound-rtp' && report.kind === 'video') {
-                        console.log('video report', report)
-                    }
-                    if (report.type === 'candidate-pair' && report.state === 'succeeded') {
-                        console.log('candidate-pair', report)
-                    }
-                });
-            });
-        }
-    }
-    setInterval(handleStats, 2000)
 
 
     if (setLocalVideo) {
         localStream = await navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true,
+        }).catch((error) => {
+            console.error('Error accessing media devices:', error);
+            // Display an error message to the user
         });
 
+        console.log('localStream', localStream)
         const localVideoElement = document.getElementById("local-video")
-
-        if (localVideoElement) {
-            localVideoElement.srcObject = localStream
-            const audioTrack = localStream.getAudioTracks()[0];
-            if (muted) {
-                audioTrack.enabled = false;
-            } else {
-                audioTrack.enabled = true;
+        if (localStream) {
+            if (localVideoElement) {
+                localVideoElement.srcObject = localStream
+                const audioTrack = localStream.getAudioTracks()[0];
+                if (muted) {
+                    audioTrack.enabled = false;
+                } else {
+                    audioTrack.enabled = true;
+                }
             }
-        }
 
-        localStream.getTracks().forEach((track) => {
-            peerConnection.addTrack(track, localStream);
-        });
+            localStream.getTracks().forEach((track) => {
+                peerConnection.addTrack(track, localStream);
+            });
+        }
     }
 
 
     peerConnection.ontrack = (event) => {
+        console.log('ontrack event', event)
         remoteStream = event.streams[0];
         if (remoteStream) {
             addRemoteVideo(socketId, remoteStream);
@@ -74,11 +51,11 @@ export async function createPeerConnection(socketId, setLocalVideo, addRemoteVid
             });
         }
     };
-
     peerConnection.onconnectionstatechange = () => {
+        console.log('peer connection state change', peerConnection.connectionState);
         if (peerConnection.connectionState === 'disconnected') {
             removeRemoteVideo(socketId);
-            if (setLocalVideo) {
+            if (setLocalVideo && localStream) {
                 localStream.getTracks().forEach(track => track.stop());
             }
             if (remoteStream) {
@@ -87,32 +64,4 @@ export async function createPeerConnection(socketId, setLocalVideo, addRemoteVid
         }
     }
     return { peerConnection, localStream, remoteStream }
-}
-
-export const handleOffer = async (offer, from, peerConnections, setPeerConnections, setRemoteVideo, removeRemoteVideo) => {
-
-    const newPeerConnection = await createPeerConnection(from, null, setRemoteVideo, removeRemoteVideo)
-    newPeerConnection.peerConnection.setRemoteDescription(new RTCSessionDescription(offer))
-    const answer = await newPeerConnection.peerConnection.createAnswer()
-    await newPeerConnection.peerConnection.setLocalDescription(answer)
-    window.socket.emit('answer', { answer, to: from })
-    setPeerConnections({ ...peerConnections, [from]: newPeerConnection });
-
-}
-
-
-export const handleAnswer = async (answer, from, peerConnections) => {
-    if (peerConnections[from]) {
-        await peerConnections[from].peerConnection.setRemoteDescription(new RTCSessionDescription(answer))
-    }
-}
-
-export const handleIceCandidate = async (candidate, from, peerConnections) => {
-    if (peerConnections[from]) {
-        try {
-            await peerConnections[from].peerConnection.addIceCandidate(new RTCIceCandidate(candidate))
-        } catch (error) {
-            console.log(error)
-        }
-    }
 }

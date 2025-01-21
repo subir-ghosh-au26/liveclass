@@ -1,0 +1,404 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f9; /* Light gray background */
+  color: #333; /* Dark gray text */
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px; /* Added padding around container */
+}
+
+.meeting-room-container {
+  background-color: #fff;
+  padding: 30px; /* Increased padding */
+  border-radius: 12px; /* More rounded edges */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Slightly stronger shadow */
+  max-width: 1200px; /* Max width for larger screens */
+  width: 100%; /* Allow to take up full width if needed */
+  box-sizing: border-box; /* Include padding and border in width/height */
+}
+
+/* Input and Button Styles */
+
+.username-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.username-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s; /* Smooth transition */
+}
+
+.username-form input:focus {
+  border-color: #5cb85c; /* Focus color */
+  outline: none;
+}
+
+.username-form button,
+.join-meeting-container button,
+.join-meeting-container form button {
+  background-color: #5cb85c; /* Green color */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.username-form button:hover,
+.join-meeting-container button:hover,
+.join-meeting-container form button:hover {
+  background-color: #4cae4c; /* Darker green on hover */
+}
+
+.join-meeting-container {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  text-align: center; /* Center align content */
+}
+
+.join-meeting-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Meeting View */
+
+.meeting-main-container {
+  display: flex;
+  margin-top: 20px;
+  gap: 20px;
+}
+
+.video-main-container {
+  flex: 2;
+  /* overflow: hidden; */ /* remove overflow from video-main-container*/
+  display: flex;
+  flex-direction: column; /* Stack components vertically */
+}
+
+.video-call-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* 100% of its container */
+  height: 100%; /* Take up as much space as possible */
+}
+
+.video-container {
+  width: 100%;
+  height: auto;
+  background: #f0f0f0; /* Light gray background */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(200px, 1fr)
+  ); /* Adjust minmax */
+  grid-gap: 15px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+.video-grid .local-video-container,
+.video-grid .user-video-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Rounded edges for videos */
+}
+
+.video-grid video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+}
+
+.video-grid .local-video-container p,
+.video-grid .user-video-container {
+  text-align: center;
+  padding-top: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Admin Panel */
+
+.admin-panel {
+  padding: 20px;
+  border: 1px solid #ddd;
+  margin-top: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.admin-panel h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.admin-panel h3 {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.admin-panel ul {
+  padding: 0;
+  list-style: none;
+}
+
+.admin-panel ul li {
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee; /* Subtle separators */
+}
+.admin-panel ul li:last-child {
+  border-bottom: none;
+}
+
+.admin-panel ul li button {
+  background-color: #d9534f;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+.admin-panel ul li button:hover {
+  background-color: #c9302c; /* Darker red on hover */
+}
+
+/* Top Container */
+
+.top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Added margin */
+}
+
+/* Modal Styling */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is on top */
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 30px; /* Increased padding */
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content button {
+  margin: 0 15px;
+}
+
+/* Control Buttons */
+
+.control-buttons-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.control-buttons-container button {
+  background-color: #5bc0de; /* Teal color */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.control-buttons-container button:hover {
+  background-color: #46b8da; /* Darker teal color on hover */
+}
+/* More Actions Buttons */
+
+.more-actions-buttons {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  z-index: 1;
+}
+
+.more-actions-buttons button {
+  background-color: #5cb85c;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+}
+
+.more-actions-buttons button:hover {
+  background-color: #4cae4c;
+}
+
+/* Chat Styles */
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 400px; /* Increased chat height */
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 15px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-message {
+  padding: 12px;
+  border-radius: 10px;
+  max-width: 80%;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+}
+
+.chat-message.sent {
+  align-self: flex-end;
+  background-color: #e2f7cb; /* Light green for sent messages */
+}
+
+.chat-message.received {
+  align-self: flex-start;
+  background-color: #f0f0f0;
+}
+
+.chat-message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-message-sender {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333;
+}
+
+.chat-message-time {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.chat-message-text {
+  margin: 0;
+  color: #333;
+}
+
+.chat-input-form {
+  display: flex;
+  padding: 15px;
+  border-top: 1px solid #ddd;
+}
+
+.chat-input-form input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+
+.chat-input-form button {
+  background-color: #5bc0de;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.chat-input-form button:hover {
+  background-color: #46b8da;
+}
+
+.full-screen-video-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+  background: #000;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 15px;
+  padding: 15px;
+}
+.full-screen-video-grid .local-video-container,
+.full-screen-video-grid .user-video-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Rounded edges for videos */
+}
+
+.full-screen-video-grid video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.full-screen-video-grid .local-video-container p,
+.full-screen-video-grid .user-video-container {
+  text-align: center;
+  padding-top: 5px;
+  font-size: 0.9rem;
+  color: #fff;
+}
